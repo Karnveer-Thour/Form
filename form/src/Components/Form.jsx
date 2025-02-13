@@ -1,13 +1,17 @@
 import React from "react";
+import { database, ref, push } from "../Firebase";
 function Form() {
   const handlePersonNo = (e) => {
     e.preventDefault();
     const managerCr = document.getElementById("managerCr");
     const yes = document.getElementById("yes");
-    const options=document.getElementsByClassName("cM-options");
-    for(let option in options){
-      if(options[option]===3)break;
-      options[option].required=true;
+    const options = document.getElementsByClassName("cM-options");
+    options[0].setAttribute("name","Manager Name");
+    options[1].setAttribute("name","Manager Email");
+    options[2].setAttribute("name","Manager Email");
+    for (let option in options) {
+      if (options[option] === 3) break;
+      options[option].required = true;
     }
     e.target.style.backgroundColor = "#D3D3D3";
     managerCr.style.display = "flex";
@@ -17,10 +21,13 @@ function Form() {
     e.preventDefault();
     const No = document.getElementById("No");
     const managerCr = document.getElementById("managerCr");
-    const options=document.getElementsByClassName("cM-options");
-    for(let option in options){
-      if(options[option]===3)break;
-      options[option].required=false;
+    const options = document.getElementsByClassName("cM-options");
+    
+    for (let option in options) {
+      if (options[option] === 3) break;
+      options[option].required = false;
+      options[option].removeAttribute("name");
+      
     }
     e.target.style.backgroundColor = "#D3D3D3";
     managerCr.style.display = "None";
@@ -28,13 +35,24 @@ function Form() {
   };
   const handleOther = (e) => {
     const OtherInput = document.getElementById("OtherInput");
+    const other=document.getElementById("other-event")
     if (e.target.value === "Other") {
       OtherInput.style.display = "block";
+      other.required=true;
+      other.setAttribute("name","Other form of event")
     } else {
+      other.removeAttribute("name");
       OtherInput.style.display = "none";
     }
   };
-
+  const handleInvalidinput = (e) => {
+    if (/\d/.test(e.target.value)) {
+      alert("Enter a valid name");
+      e.target.style.border = "2px solid red";
+    } else {
+      e.target.style.border = "none";
+    }
+  };
   return (
     <div
       className="container mt-5 d-flex flex-direction-column justify-content-start align-items-start"
@@ -45,35 +63,56 @@ function Form() {
         backgroundColor: "#f0f0f0",
       }}
     >
-      <form>
+      <form
+        name="Event_Form"
+        target="_Top"
+        onSubmit={(e) => {
+          e.preventDefault(); // Prevent the default form submission
+            
+            // Create a FormData object
+            let formData = new FormData(e.target);
+            
+            // Convert form data to an object
+            let formObject = {};
+            formData.forEach((value, key) => {
+              formObject[key] = value;
+            });
+            console.log(formObject);
+            push(ref(database, "users"), formObject)
+      .then(() => {
+        alert("Data submitted successfully!"); // Clear form after submission
+      })
+      .catch((error) => alert("Error saving data:", error));
+            
+        }}
+      >
         <div className="mt-3">
           <div
             className="Heading d-flex justify-content-start flex-column align-items-centert"
             style={{ height: "auto" }}
           >
             <h2 className="fs-5">TECH HUB YOKOHAMA</h2>
-            
-              <ul style={{textAlign:"left"}}>
-                <li>
-                  {" "}
-                  When using the event space at TECH HUB YOKOHAMA, you need to
-                  submit this application form.
-                </li>
-                <li>
-                  {" "}
-                  Please fill in the required fields and click the "Submit"
-                  button at the bottom of the page. You will receive an
-                  automatic email confirming receipt.
-                </li>
-                <li>
-                  {" "}
-                  Please note that your reservation is tentative at the time you
-                  submit this application form, and will be confirmed only after
-                  approval by Mitsubishi Estate Co.. Upon approval, you will
-                  receive an e-mail confirming your reservation.
-                </li>
-              </ul>
-            
+
+            <ul className="mx-4" style={{ textAlign: "left" }}>
+              <li>
+                {" "}
+                When using the event space at TECH HUB YOKOHAMA, you need to
+                submit this application form.
+              </li>
+              <li>
+                {" "}
+                Please fill in the required fields and click the "Submit" button
+                at the bottom of the page. You will receive an automatic email
+                confirming receipt.
+              </li>
+              <li>
+                {" "}
+                Please note that your reservation is tentative at the time you
+                submit this application form, and will be confirmed only after
+                approval by Mitsubishi Estate Co.. Upon approval, you will
+                receive an e-mail confirming your reservation.
+              </li>
+            </ul>
           </div>
         </div>
         <div className="mb-3 me-3 ms-3 d-flex flex-column justify-content-start align-items-start">
@@ -88,7 +127,9 @@ function Form() {
             type="text"
             className="form-control mx-1"
             id="OrganizationName"
-            aria-describedby="emailHelp"
+            name="OrganizationName"
+            aria-describedby="organizationName"
+            onBlur={handleInvalidinput}
             required
           />
         </div>
@@ -109,23 +150,32 @@ function Form() {
           </div>
           <div className="mb-3 d-flex justify-content-between flex-row align-items-start flex-wrap">
             <div className="ms-5" style={{ width: "40%" }}>
-              <label htmlFor="Name" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="Name"
+                className="form-label text-start w-100 mx-3"
+              >
                 Name*
               </label>
               <input
                 type="Text"
                 className="form-control"
+                name="personName"
                 id="Name"
                 aria-describedby="emailHelp"
+                onBlur={handleInvalidinput}
                 required
               />
             </div>
             <div className="me-5" style={{ width: "40%" }}>
-              <label htmlFor="Email1" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="Email1"
+                className="form-label text-start w-100 mx-3"
+              >
                 Email address*
               </label>
               <input
                 type="email"
+                name="person-Email"
                 className="form-control"
                 id="Email1"
                 aria-describedby="emailHelp"
@@ -133,13 +183,17 @@ function Form() {
               />
             </div>
             <div className="ms-5 mt-2" style={{ width: "40%" }}>
-              <label htmlFor="Phoneno." className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="Phoneno."
+                className="form-label text-start w-100 mx-3"
+              >
                 Phone Number*
               </label>
               <input
                 type="Number"
                 className="form-control"
                 id="Phoneno."
+                name="person-number"
                 required
                 aria-describedby="emailHelp"
                 onClick={(e) => {
@@ -185,6 +239,8 @@ function Form() {
                 type="button"
                 className="btn w-50"
                 id="yes"
+                name="Same person responsible as manager"
+                value="yes"
                 style={{
                   borderRadius: "30px",
                   border: "none",
@@ -198,6 +254,8 @@ function Form() {
                 type="button"
                 className="btn w-50"
                 id="No"
+                name="Same person responsible as manager"
+                value="No"
                 style={{ borderRadius: "30px", border: "none" }}
                 onClick={handlePersonNo}
               >
@@ -211,18 +269,25 @@ function Form() {
             style={{ width: "100%", display: "None" }}
           >
             <div className="ms-5" style={{ width: "40%" }}>
-              <label htmlFor="M-Name" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="M-Name"
+                className="form-label text-start w-100 mx-3"
+              >
                 Name*
               </label>
               <input
                 type="Text"
                 className="form-control cM-options"
                 id="M-Name"
+                onBlur={handleInvalidinput}
                 aria-describedby="emailHelp"
               />
             </div>
             <div className="me-5" style={{ width: "40%" }}>
-              <label htmlFor="M-Email" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="M-Email"
+                className="form-label text-start w-100 mx-3"
+              >
                 Email address*
               </label>
               <input
@@ -232,8 +297,11 @@ function Form() {
                 aria-describedby="emailHelp"
               />
             </div>
-            <div className="ms-5 mt-2" style={{ width: "40%" }} >
-              <label htmlFor="M-number" className="form-label text-start w-100 mx-3">
+            <div className="ms-5 mt-2" style={{ width: "40%" }}>
+              <label
+                htmlFor="M-number"
+                className="form-label text-start w-100 mx-3"
+              >
                 Phone Number*
               </label>
               <input
@@ -261,13 +329,17 @@ function Form() {
           </div>
           <div className="mb-3 d-flex justify-content-between flex-row align-items-start flex-wrap">
             <div className="ms-5" style={{ width: "40%" }}>
-              <label htmlFor="E-Date" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="E-Date"
+                className="form-label text-start w-100 mx-3"
+              >
                 Date of use*
               </label>
               <input
                 type="Date"
                 className="form-control"
                 id="E-Date"
+                name="Date of use"
                 aria-describedby="emailHelp"
                 pattern="\d{4}-\d{2}-\d{2}"
                 required
@@ -276,40 +348,66 @@ function Form() {
           </div>
           <div className="mb-3 d-flex justify-content-between flex-row align-items-start flex-wrap">
             <div className="ms-5" style={{ width: "40%" }}>
-              <label htmlFor="Start-t" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="Start-t"
+                className="form-label text-start w-100 mx-3"
+              >
                 Start Time*
               </label>
               <input
                 type="time"
                 className="form-control"
+                name="Start time"
                 id="Start-t"
                 aria-describedby="emailHelp"
                 required
               />
             </div>
             <div className="me-5" style={{ width: "40%" }}>
-              <label htmlFor="E-Time" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="E-Time"
+                className="form-label text-start w-100 mx-3"
+              >
                 End Time*
               </label>
               <input
                 type="time"
                 className="form-control"
+                name="End time"
                 id="E-Time"
                 aria-describedby="emailHelp"
                 required
               />
             </div>
             <div className="ms-5 mt-2" style={{ width: "40%" }}>
-              <label htmlFor="En-Time" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="En-Time"
+                className="form-label text-start w-100 mx-3"
+              >
                 Entry Time*
               </label>
-              <input type="time" className="form-control" id="En-Time" required />
+              <input
+                type="time"
+                className="form-control"
+                name="Entry time"
+                id="En-Time"
+                required
+              />
             </div>
             <div className="me-5 mt-2" style={{ width: "40%" }}>
-              <label htmlFor="Ex-Time" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="Ex-Time"
+                className="form-label text-start w-100 mx-3"
+              >
                 Exit Time*
               </label>
-              <input type="time" className="form-control" id="Ex-Time" required/>
+              <input
+                type="time"
+                className="form-control"
+                name="Exit time"
+                id="Ex-Time"
+                required
+              />
             </div>
           </div>
           <ul className="mt-4" style={{ fontSize: "1rem", textAlign: "left" }}>
@@ -330,45 +428,62 @@ function Form() {
           </ul>
           <div className="mb-3 d-flex justify-content-between flex-row align-items-start flex-wrap">
             <div className="ms-5" style={{ width: "40%" }}>
-              <label htmlFor="Start-t" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="Start-t"
+                className="form-label text-start w-100 mx-3"
+              >
                 Event Name*
               </label>
               <input
                 type="Text"
                 className="form-control"
                 id="Start-t"
+                name="Event Name"
                 aria-describedby="emailHelp"
+                onBlur={handleInvalidinput}
                 required
               />
             </div>
             <div className="me-5" style={{ width: "40%" }}>
-              <label htmlFor="E-Name" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="E-Name"
+                className="form-label text-start w-100 mx-3"
+              >
                 Name of Event Organizer*
               </label>
               <input
                 type="Text"
                 className="form-control"
                 id="E-Name"
+                name="Name of Event Organizer"
                 aria-describedby="emailHelp"
+                onBlur={handleInvalidinput}
                 required
               />
             </div>
             <div className="ms-5 mt-2" style={{ width: "40%" }}>
-              <label htmlFor="No-peoples" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="No-peoples"
+                className="form-label text-start w-100 mx-3"
+              >
                 Number of people expected to attend*
               </label>
               <input
-                type="Text"
+                type="number"
                 className="form-control"
+                name="Number of people expected to attend"
                 id="No-peoples"
                 required
               />
             </div>
             <div className="me-5 mt-2" style={{ width: "40%" }}>
-              <label htmlFor="E-Details" className="form-label text-start w-100 mx-3">
+              <label
+                htmlFor="E-Details"
+                className="form-label text-start w-100 mx-3"
+              >
                 Event Details
               </label>
-              <input type="file" className="form-control" id="E-Details" />
+              <input type="file" className="form-control" id="E-Details" name="Event Details"/>
               <div id="emailHelp" className="form-text text-start w-100 mx-3">
                 lf you have a proposal, upload here
               </div>
@@ -382,7 +497,7 @@ function Form() {
               <input
                 className="form-check-input"
                 type="radio"
-                name="Radios"
+                name="Form of event"
                 id="Pitch"
                 value="Pitch Event"
                 required
@@ -396,7 +511,7 @@ function Form() {
               <input
                 className="form-check-input"
                 type="radio"
-                name="Radios"
+                name="Form of event"
                 id="Workshop"
                 value="Workshop"
                 required
@@ -410,7 +525,7 @@ function Form() {
               <input
                 className="form-check-input"
                 type="radio"
-                name="Radios"
+                name="Form of event"
                 id="Seminar"
                 value="Seminar"
                 required
@@ -424,7 +539,7 @@ function Form() {
               <input
                 className="form-check-input"
                 type="radio"
-                name="Radios"
+                name="Form of event"
                 id="Other"
                 value="Other"
                 onClick={handleOther}
@@ -442,8 +557,8 @@ function Form() {
               <input
                 type="Text"
                 className="form-control h-100"
-                id="No-peoples"
-                required
+                id="other-event"
+                onBlur={handleInvalidinput}
               />
             </div>
             <div className="mb-3 d-flex flex-column justify-content-start align-items-start w-100 mt-3">
@@ -458,34 +573,38 @@ function Form() {
                 type="text"
                 className="form-control mx-1"
                 id="/ Co-Organizer/Support"
+                // name="Co-Organizer/Support"
                 aria-describedby="emailHelp"
+                onBlur={handleInvalidinput}
                 required
               />
             </div>
             <div className="mb-2 mt-4 d-flex justify-content-between flex-column align-items-start flex-wrap">
               <p className="form-label" style={{ fontWeight: "bold" }}>
-                Form of Event*
+              Availabilities of Interviews*
               </p>
               <div
                 className="form-check"
                 onClick={(e) => {
                   const photoshoot =
                     document.querySelectorAll(".lower-options");
-                   const lowerO= document.getElementsByName("l-options");
-                  for(let ele in lowerO){
-                    if(lowerO[ele]===2)break;
-                    lowerO[ele].required=true;
+                  const lowerO = document.getElementsByClassName("l-options");
+                  lowerO[0].setAttribute("name","Photoshoot");
+                  lowerO[1].setAttribute("name","Photoshoot");
+                  for (let ele in lowerO) {
+                    if (lowerO[ele] === 2) break;
+                    lowerO[ele].required = true;
                   }
                   photoshoot.forEach((ele) => {
                     ele.classList.remove("d-none");
-                    ele.required=true;
+                    ele.required = true;
                   });
                 }}
               >
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="u-option"
+                  name="Availabilities of Interviews*"
                   id="E-yes"
                   value="yes"
                   required
@@ -495,16 +614,15 @@ function Form() {
                 </label>
               </div>
               <p
-                className="form-label ms-5 lower-options d-none"
+                className="form-label ms-0 lower-options d-none"
                 style={{ fontWeight: "bold" }}
               >
                 Photoshoot
               </p>
               <div className="form-check ms-4 lower-options d-none">
                 <input
-                  className="form-check-input"
+                  className="form-check-input l-options"
                   type="radio"
-                  name="l-options"
                   id="l-yes"
                   value="yes"
                 />
@@ -521,9 +639,8 @@ function Form() {
               </div>
               <div className="form-check ms-4 lower-options d-none">
                 <input
-                  className="form-check-input"
+                  className="form-check-input l-options"
                   type="radio"
-                  name="l-options"
                   id="l-no"
                   value="No"
                 />
@@ -538,21 +655,22 @@ function Form() {
                     document.querySelectorAll(".lower-options");
                   photoshoot.forEach((ele) => {
                     ele.classList.add("d-none");
-                    const lowerO= document.getElementsByName("l-options");
-                  for(let ele in lowerO){
-                    if(lowerO[ele]===2)break;
-                    lowerO[ele].required=true;
-                  }
-                    ele.required=false;
+                    const lowerO = document.getElementsByClassName("l-options");
+                    for (let ele in lowerO) {
+                      if (lowerO[ele] === 2) break;
+                      lowerO[ele].removeAttribute("name");
+                      lowerO[ele].required = false;
+                    }
+                    ele.required = false;
                   });
                 }}
               >
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="u-option"
+                  name="Availabilities of Interviews*"
                   id="E-No"
-                  value="Workshop"
+                  value="No"
                   required
                 />
                 <label className="form-check-label form-label" htmlFor="E-No">
@@ -569,25 +687,24 @@ function Form() {
               <input
                 className="form-check-input"
                 type="radio"
-                name="beverage"
+                name="Food and beverage availability"
                 id="bev-custom"
                 value="Catering order to be placed in the work lounge"
                 required
                 onClick={() => {
                   const beverages = document.getElementById("beverages");
-                  const underOptions=document.getElementsByClassName("bev-U");
+                  const underOptions = document.getElementsByClassName("bev-U");
                   beverages.classList.remove("d-none");
                   beverages.classList.add("d-flex");
-                  for(let ele in underOptions){
-                    if(underOptions[ele]===2)break;
-                    underOptions[ele].required=true;
+                  underOptions[0].setAttribute("name","Number of people");
+                  underOptions[1].setAttribute("name","Scheduled Start Time");
+                  for (let ele in underOptions) {
+                    if (underOptions[ele] === 2) break;
+                    underOptions[ele].required = true;
                   }
                 }}
               />
-              <label
-                className="form-check-label"
-                htmlFor="bev-custom"
-              >
+              <label className="form-check-label" htmlFor="bev-custom">
                 Catering order to be placed in the work lounge
               </label>
             </div>
@@ -596,18 +713,24 @@ function Form() {
               id="beverages"
             >
               <div className="ms-5" style={{ width: "40%" }}>
-                <label htmlFor="No-people" className="form-label text-start w-100 mx-3">
+                <label
+                  htmlFor="No-people"
+                  className="form-label text-start w-100 mx-3"
+                >
                   Number of people*
                 </label>
                 <input
-                  type="Text"
+                  type="number"
                   className="form-control bev-U"
                   id="No-people"
                   aria-describedby="emailHelp"
                 />
               </div>
               <div className="me-5" style={{ width: "40%" }}>
-                <label htmlFor="Sta-Time" className="form-label text-start w-100 mx-3">
+                <label
+                  htmlFor="Sta-Time"
+                  className="form-label text-start w-100 mx-3"
+                >
                   Scheduled Start Time*
                 </label>
                 <input
@@ -622,18 +745,19 @@ function Form() {
               <input
                 className="form-check-input"
                 type="radio"
-                name="beverage"
+                name="Food and beverage availability"
                 id="yes-bev"
                 value="Soft drinks in plastic bottles"
                 required
                 onClick={() => {
                   const beverages = document.getElementById("beverages");
-                  const underOptions=document.getElementsByClassName("bev-U");
+                  const underOptions = document.getElementsByClassName("bev-U");
                   beverages.classList.add("d-none");
                   beverages.classList.remove("d-flex");
-                  for(let ele in underOptions){
-                    if(underOptions[ele]===2)break;
-                    underOptions[ele].required=true;
+                  for (let ele in underOptions) {
+                    if (underOptions[ele] === 2) break;
+                    underOptions[ele].removeAttribute("name");
+                    underOptions[ele].required = false;
                   }
                 }}
               />
@@ -642,12 +766,13 @@ function Form() {
                 htmlFor="yes-bev"
                 onClick={() => {
                   const beverages = document.getElementById("beverages");
-                  const underOptions=document.getElementsByClassName("bev-U");
+                  const underOptions = document.getElementsByClassName("bev-U");
                   beverages.classList.add("d-none");
                   beverages.classList.remove("d-flex");
-                  for(let ele in underOptions){
-                    if(underOptions[ele]===2)break;
-                    underOptions[ele].required=true;
+                  for (let ele in underOptions) {
+                    if (underOptions[ele] === 2) break;
+                    underOptions[ele].removeAttribute("name");
+                    underOptions[ele].required = true;
                   }
                 }}
               >
@@ -658,19 +783,20 @@ function Form() {
               className="form-check"
               onClick={() => {
                 const beverages = document.getElementById("beverages");
-                const underOptions=document.getElementsByClassName("bev-U");
+                const underOptions = document.getElementsByClassName("bev-U");
                 beverages.classList.add("d-none");
                 beverages.classList.remove("d-flex");
-                for(let ele in underOptions){
-                  if(underOptions[ele]===2)break;
-                  underOptions[ele].required=true;
+                for (let ele in underOptions) {
+                  if (underOptions[ele] === 2) break;
+                  underOptions[ele].removeAttribute("name");
+                  underOptions[ele].required = false;
                 }
               }}
             >
               <input
                 className="form-check-input"
                 type="radio"
-                name="beverage"
+                name="Food and beverage availability"
                 id="No-bev"
                 required
                 value="No food or drink"
@@ -708,11 +834,16 @@ function Form() {
               className="form-check w-100"
               onClick={() => {
                 const product = document.querySelectorAll(".product");
-                const productOpt=document.getElementsByClassName("product-opt");
-                let i=0;
-                for(let opt in productOpt){
-                  if(i===productOpt.length)break;
-                  productOpt[opt].required=true;
+                const productOpt =
+                  document.getElementsByClassName("product-opt");
+                  productOpt[0].setAttribute("name",`If yes, please describe in detail the products you plan to
+                    bring (product name, size, quantity, etc.)`);
+                  productOpt[1].setAttribute("name",`If yes, upload any documents that show the details of the
+                  product(s) you plan to bring`);
+                let i = 0;
+                for (let opt in productOpt) {
+                  if (i === productOpt.length) break;
+                  productOpt[opt].required = true;
                   i++;
                 }
                 product.forEach((ele) => {
@@ -723,12 +854,15 @@ function Form() {
               <input
                 className="form-check-input"
                 type="radio"
-                name="exhibitions"
+                name="Availability of product demonstrations, exhibitions, etc"
                 id="exhibitionsYes"
-                value="option1"
+                value="yes"
                 required
               />
-              <label className="form-check-label d-flex" htmlFor="exhibitionsYes">
+              <label
+                className="form-check-label d-flex"
+                htmlFor="exhibitionsYes"
+              >
                 Yes
               </label>
 
@@ -738,10 +872,11 @@ function Form() {
                   bring (product name, size, quantity, etc.)
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   className="form-control product-opt"
                   id="Product-S"
                   aria-describedby="emailHelp"
+                  onBlur={handleInvalidinput}
                 />
               </div>
               <div className="form-group my-2 mx-2 w-100 text-left d-flex flex-column align-items-start product d-none">
@@ -761,25 +896,27 @@ function Form() {
               className="form-check my-2"
               onClick={() => {
                 const product = document.querySelectorAll(".product");
-                const productOpt=document.getElementsByClassName("product-opt");
-                let i=0;
-                for(let opt in productOpt){
-                  if(i===productOpt.length)break;
-                  productOpt[opt].required=false;
+                const productOpt =
+                  document.getElementsByClassName("product-opt");
+                let i = 0;
+                for (let opt in productOpt) {
+                  if (i === productOpt.length) break;
+                  productOpt[opt].removeAttribute("name");
+                  productOpt[opt].required = false;
                   i++;
                 }
                 product.forEach((ele) => {
                   ele.classList.add("d-none");
-                  ele.required=false;
+                  ele.required = false;
                 });
               }}
             >
               <input
                 className="form-check-input"
                 type="radio"
-                name="exhibitions"
+                name="Availability of product demonstrations, exhibitions, etc"
                 id="exhibitionsNo"
-                value="option2"
+                value="No"
                 required
               />
               <label className="form-check-label" htmlFor="exhibitionsNo">
@@ -791,42 +928,26 @@ function Form() {
                 Would you like to be listed on TECH HUB YOKOHAMA HP?
               </p>
             </div>
-            <div
-              className="form-check my-2"
-              onClick={() => {
-                const product = document.querySelectorAll(".product");
-                product.forEach((ele) => {
-                  ele.classList.add("d-none");
-                });
-              }}
-            >
+            <div className="form-check my-2">
               <input
                 className="form-check-input"
                 type="radio"
-                name="listed"
+                name="Would you like to be listed on TECH HUB YOKOHAMA HP"
                 id="listed-yes"
-                value="option2"
+                value="yes"
                 required
               />
               <label className="form-check-label" htmlFor="listed-yes">
                 Yes
               </label>
             </div>
-            <div
-              className="form-check "
-              onClick={() => {
-                const product = document.querySelectorAll(".product");
-                product.forEach((ele) => {
-                  ele.classList.add("d-none");
-                });
-              }}
-            >
+            <div className="form-check ">
               <input
                 className="form-check-input"
                 type="radio"
-                name="listed"
+                name="Would you like to be listed on TECH HUB YOKOHAMA HP"
                 id="listed-no"
-                value="option2"
+                value="No"
                 required
               />
               <label className="form-check-label" htmlFor="listed-no">
@@ -926,74 +1047,165 @@ function Form() {
             </ul>
 
             <div className="form-check">
-              <input type="checkbox" className="form-check-input" id="prec" required/>
+              <input
+                type="checkbox"
+                className="form-check-input"
+                name="Precautions"
+                id="prec"
+                required
+              />
               <label className="form-check-label" htmlFor="prec">
                 I have reviewed the above notes
               </label>
             </div>
 
-            <ul className="mt-3" style={{ listStyle: "square", textAlign: "left" }}>
-              <li
-                className="fs-3"
-                
-              >
-                Pledge
-              </li>
+            <ul
+              className="mt-3"
+              style={{ listStyle: "square", textAlign: "left" }}
+            >
+              <li className="fs-3">Pledge</li>
               <ol style={{ listStyle: "numbers", textAlign: "left" }}>
-                <li>Not be a member of organized crime groups, companies or organizations related to organized crime groups or their affiliates (including past members), general assemblymen, social activists, political activists, special intelligence groups, or other anti-social forces (hereinafter referred to as "anti-social forces").
-                The applicant must not have any socially reprehensible relationship with antisocial forces.</li>
-                <li>The organization to which the applicant belongs is not engaged in direct or indirect transactions with antisocial forces as described in the preceding paragraph.</li>
+                <li>
+                  Not be a member of organized crime groups, companies or
+                  organizations related to organized crime groups or their
+                  affiliates (including past members), general assemblymen,
+                  social activists, political activists, special intelligence
+                  groups, or other anti-social forces (hereinafter referred to
+                  as "anti-social forces"). The applicant must not have any
+                  socially reprehensible relationship with antisocial forces.
+                </li>
+                <li>
+                  The organization to which the applicant belongs is not engaged
+                  in direct or indirect transactions with antisocial forces as
+                  described in the preceding paragraph.
+                </li>
               </ol>
-              </ul>
-              <div className="form-check">
-              <input type="checkbox" className="form-check-input" id="pled" required/>
+            </ul>
+            <div className="form-check">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                name="Pledge"
+                id="pled"
+                required
+              />
               <label className="form-check-label" htmlFor="pled">
-              Constrain the above contents.
+                Constrain the above contents.
               </label>
-              </div>
-            <ul className="mt-3" style={{ listStyle: "square", textAlign: "left" }}>
-              <li
-                className="fs-3"
-                
-              >
+            </div>
+            <ul
+              className="mt-3"
+              style={{ listStyle: "square", textAlign: "left" }}
+            >
+              <li className="fs-3">
                 Consent to handling of personal information
               </li>
               <ol style={{ listStyle: "numbers", textAlign: "left" }}>
-                <li>Purpose of Use
-                  <ul style={{listStyle:"none"}}>
-                    <li>The personal information entered in this form will be used by the City of Yokohama, Mitsubishi Estate and Yokohama Future Organization Joint Venture(hereinafter referred to as the "Joint Venture"), which operates TECH HUB YOKOHAMA, and General Incorporated Association Venture Café Tokyo (hereinafter referred to as the
-                      "Venture Café". The City of Yokohama, the Joint Venture, and the Venture Café are collectively referred to as the "Operator"), and Stockholm Roast Corporation, which operates the adjacent restaurant Tomt café bistro bar, will collect, use, and manage the information for the following purposes, after taking the necessary protective measures.</li>
+                <li>
+                  Purpose of Use
+                  <ul style={{ listStyle: "none" }}>
+                    <li>
+                      The personal information entered in this form will be used
+                      by the City of Yokohama, Mitsubishi Estate and Yokohama
+                      Future Organization Joint Venture(hereinafter referred to
+                      as the "Joint Venture"), which operates TECH HUB YOKOHAMA,
+                      and General Incorporated Association Venture Café Tokyo
+                      (hereinafter referred to as the "Venture Café". The City
+                      of Yokohama, the Joint Venture, and the Venture Café are
+                      collectively referred to as the "Operator"), and Stockholm
+                      Roast Corporation, which operates the adjacent restaurant
+                      Tomt café bistro bar, will collect, use, and manage the
+                      information for the following purposes, after taking the
+                      necessary protective measures.
+                    </li>
                   </ul>
                 </li>
-                <li>Provision to third parties
-                    <p className="mb-0">The Operator will not provide or disclose the entered personal information to any third party, except to third parties to whom the Operator has entrusted its operations or in any of the following cases</p>
+                <li>
+                  Provision to third parties
+                  <p className="mb-0">
+                    The Operator will not provide or disclose the entered
+                    personal information to any third party, except to third
+                    parties to whom the Operator has entrusted its operations or
+                    in any of the following cases
+                  </p>
                   <ol>
-                    <li>With the consent of the applicant. The Operator plans to provide the applicant's information to other companies registered as TECH HUB YOKOHAMA Work Lounge members (startup members, partner members, and mentor companies) after obtaining the applicant's consent.</li>
-                    <li>When it is necessary for the protection of a person's life, body, or property and it is difficult to obtain the applicant's consent</li>
-                    <li>When disclosure or provision is required by other laws and regulations</li>
-                    </ol>
+                    <li>
+                      With the consent of the applicant. The Operator plans to
+                      provide the applicant's information to other companies
+                      registered as TECH HUB YOKOHAMA Work Lounge members
+                      (startup members, partner members, and mentor companies)
+                      after obtaining the applicant's consent.
+                    </li>
+                    <li>
+                      When it is necessary for the protection of a person's
+                      life, body, or property and it is difficult to obtain the
+                      applicant's consent
+                    </li>
+                    <li>
+                      When disclosure or provision is required by other laws and
+                      regulations
+                    </li>
+                  </ol>
                 </li>
-                <li>The Operator shall strictly manage the entered personal information, pay sufficient attention to the protection of privacy, and shall not use it for any purposes other than those stipulated in the preceding paragraph. However, the Operator may disclose such personal information to government agencies, etc., in accordance with laws, ordinances, etc. (including the Yokohama City Ordinance on Civic Collaboration), and such personal information may be used by the City of Yokohama in accordance with the preceding paragraph (1).</li>
-                <li>This privacy policy is subject to change without notice to the applicant, except for changes that may materially affect the applicant.</li>
+                <li>
+                  The Operator shall strictly manage the entered personal
+                  information, pay sufficient attention to the protection of
+                  privacy, and shall not use it for any purposes other than
+                  those stipulated in the preceding paragraph. However, the
+                  Operator may disclose such personal information to government
+                  agencies, etc., in accordance with laws, ordinances, etc.
+                  (including the Yokohama City Ordinance on Civic
+                  Collaboration), and such personal information may be used by
+                  the City of Yokohama in accordance with the preceding
+                  paragraph (1).
+                </li>
+                <li>
+                  This privacy policy is subject to change without notice to the
+                  applicant, except for changes that may materially affect the
+                  applicant.
+                </li>
               </ol>
-              </ul>
-              <div className="form-check">
-              <input type="checkbox" className="form-check-input" id="pled" required/>
-              <label className="form-check-label" htmlFor="pled">
-                      I agree to the above
+            </ul>
+            <div className="form-check">
+              <input
+                type="checkbox"
+                name="I agree to the above"
+                className="form-check-input"
+                id="agree"
+                required
+              />
+              <label className="form-check-label" htmlFor="agree">
+                I agree to the above
               </label>
-              </div>
-              <div className="form-check">
-              <input type="checkbox" className="form-check-input" id="pled" required/>
-              <label className="form-check-label" htmlFor="pled">
-              | confirm the above information and apply for use.
+            </div>
+            <div className="form-check">
+              <input
+                type="checkbox"
+                // name="confirm the above information and apply for use."
+                className="form-check-input"
+                id="confirm"
+                required
+              />
+              <label className="form-check-label" htmlFor="confirm">
+                | confirm the above information and apply for use.
               </label>
-              </div>
+            </div>
           </div>
         </div>
         <div className="container flex align-items-center justify-content-center my-3 w-75">
-        <button type="reset" className="w-25 mx-2 btn btn-primary rounded-pill">Clear all</button>
-        <button type="submit" className="w-25 mx-2 btn btn-primary rounded-pill">Submit</button>
+          <button
+            type="reset"
+            className="w-25 mx-2 btn btn-primary rounded-pill"
+            onClick={handleInvalidinput}
+          >
+            Clear all
+          </button>
+          <button
+            type="submit"
+            className="w-25 mx-2 btn btn-primary rounded-pill"
+          >
+            Submit
+          </button>
         </div>
       </form>
     </div>
