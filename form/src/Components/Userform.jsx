@@ -1,6 +1,7 @@
-import React from 'react'
+import { data } from 'autoprefixer';
+import React, { useState } from 'react'
 
-function Userform({handleInvalidinput}) {
+function Userform({handleInvalidinput,data,setData,emailValidator}) {
   return (
     <div className="mb-3">
           <div className="mt-4 mx-3 d-flex flex-column justify-content-start align-items-start">
@@ -30,7 +31,11 @@ function Userform({handleInvalidinput}) {
                 name="personName"
                 id="Name"
                 aria-describedby="emailHelp"
-                onChange={handleInvalidinput}
+                value={data.PersonName}
+                onChange={(e)=>{
+                  handleInvalidinput(e);
+                  setData({...data,PersonName:e.target.value});
+                }}
                 required
               />
             </div>
@@ -47,6 +52,11 @@ function Userform({handleInvalidinput}) {
                 className="form-control"
                 id="Email1"
                 aria-describedby="emailHelp"
+                onChange={(e)=>{
+                  setData({...data,PersonEmail:e.target.value});
+                }}
+                onBlur={emailValidator}
+                value={data.PersonEmail}
                 required
               />
             </div>
@@ -62,11 +72,12 @@ function Userform({handleInvalidinput}) {
                 className="form-control"
                 id="Phoneno."
                 name="person-number"
+                onChange={(e) => {
+                 setData({...data,personNumber:e.target.value});
+                }}
+                value={data.personNumber}
                 required
                 aria-describedby="emailHelp"
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
               />
             </div>
           </div>

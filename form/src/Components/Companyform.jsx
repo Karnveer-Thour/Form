@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-function Companyform({handleInvalidinput}) {
+function Companyform({handleInvalidinput,data,setData}) {
   return (
     <div className="mb-3 me-3 ms-3 d-flex flex-column justify-content-start align-items-start">
           <label
@@ -16,7 +16,12 @@ function Companyform({handleInvalidinput}) {
             id="OrganizationName"
             name="OrganizationName"
             aria-describedby="organizationName"
-            onChange={handleInvalidinput}
+            onChange={(e)=>{
+              handleInvalidinput(e);
+              setData({...data,OrganizationName:e.target.value});
+              console.log(data);
+            }}
+            value={data.organizationName}
             required
           />
         </div>

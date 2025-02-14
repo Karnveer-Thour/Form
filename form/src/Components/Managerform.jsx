@@ -3,7 +3,7 @@ import React from 'react'
 function Managerform({handleInvalidinput}) {
   return (
     <div
-          className="container  justify-content-between flex-row align-items-start flex-wrap"
+          className="container d-flex justify-content-between flex-row align-items-start flex-wrap"
           id="managerCr"
           style={{ width: "100%", display: "None" }}
         >
