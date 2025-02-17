@@ -26,6 +26,7 @@ function Photoshoot({setData}) {
               }))
             }}
             required
+            defaultChecked
           />
           <label className="form-check-label form-label" htmlFor="l-yes">
             yes

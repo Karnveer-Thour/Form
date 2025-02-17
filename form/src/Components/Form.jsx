@@ -5,8 +5,9 @@ import Eventform from "./Eventform";
 import Heading from "./Heading";
 import ManagerDetails from "./ManagerDetails";
 import Userform from "./Userform";
+import Alert from "./Alert";
 function Form() {
-  const [data, setData] = useState({
+  const user={
     OrganizationName: "",
     PersonName: "",
     PersonEmail: "",
@@ -29,7 +30,20 @@ function Form() {
       Availibilty_of_productDemonstrations_exhibition_etc: "",
       like_to_be_listed: "",
     },
-  });
+  }
+  const [data, setData] = useState(user);
+  const [message,setMessage]=useState();
+  const handleReset = (message)=>{
+    setData(user);
+    window.scrollTo({top:"0",behavior:"smooth"});
+    setAlert(message)
+  }
+  const setAlert=(message)=>{
+    setMessage(message);
+    setTimeout(() => {
+      setMessage();
+    }, 2000);
+  }
   const emailValidator=(e)=>{
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!pattern.test(e.target.value)) {
@@ -55,13 +69,14 @@ function Form() {
         backgroundColor: "#f0f0f0",
       }}
     >
-      <form onSubmit={e=>{e.preventDefault();console.log(data)}}>
+      <form onSubmit={e=>{e.preventDefault();handleReset("Form submitted");console.log(data)}}>
+        <Alert message={message}/>
         <Heading />
         <Companyform handleInvalidinput={handleInvalidinput} data={data} setData={setData} />
         <Userform handleInvalidinput={handleInvalidinput} data={data} setData={setData} emailValidator={emailValidator} />
         <ManagerDetails handleInvalidinput={handleInvalidinput} data={data} setData={setData} emailValidator={emailValidator}/>
         <Eventform handleInvalidinput={handleInvalidinput} data={data} setData={setData} />
-        <Buttons data={data} setData={setData}/>
+        <Buttons handleReset={handleReset}/>
       </form>
     </div>
   );

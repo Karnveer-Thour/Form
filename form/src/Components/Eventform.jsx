@@ -41,7 +41,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
                 },
               }));
             }}
-            value={data.date_of_use}
+            value={data.eventOverview.date_of_use}
             required
           />
         </div>
@@ -283,6 +283,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
               });
             }}
             required
+            defaultChecked
           />
           <label className="form-check-label form-label" htmlFor="Pitch">
             Pitch Event
@@ -450,6 +451,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
                 })
               }
               required
+              defaultChecked
             />
             <label className="form-check-label form-label" htmlFor="E-No">
               No
@@ -539,6 +541,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
               });
             }}
             required
+            defaultChecked
             value="No food or drink"
           />
           <label className="form-check-label" htmlFor="No-bev">
@@ -628,6 +631,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
               });
             }}
             required
+            defaultChecked
           />
           <label className="form-check-label" htmlFor="exhibitionsNo">
             No
@@ -680,6 +684,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
               }));
             }}
             required
+            defaultChecked
           />
           <label className="form-check-label" htmlFor="listed-no">
             No

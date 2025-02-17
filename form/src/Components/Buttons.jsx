@@ -1,11 +1,12 @@
 import React from 'react'
 
-function Buttons({data,setData}) {
+function Buttons({handleReset}) {
   return (
     <div className="container flex align-items-center justify-content-center my-3 w-75">
           <button
-            type="reset"
+          type='reset'
             className="w-25 mx-2 btn btn-primary rounded-pill"
+            onClick={()=> handleReset("Form Cleared")}
           >
             Reset
           </button>

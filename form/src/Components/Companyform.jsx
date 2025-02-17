@@ -1,5 +1,3 @@
-import React, { useState } from 'react'
-
 function Companyform({handleInvalidinput,data,setData}) {
   return (
     <div className="mb-3 me-3 ms-3 d-flex flex-column justify-content-start align-items-start">
@@ -19,9 +17,8 @@ function Companyform({handleInvalidinput,data,setData}) {
             onChange={(e)=>{
               handleInvalidinput(e);
               setData({...data,OrganizationName:e.target.value});
-              console.log(data);
             }}
-            value={data.organizationName}
+            value={data.OrganizationName}
             required
           />
         </div>
