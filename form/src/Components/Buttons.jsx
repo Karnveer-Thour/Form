@@ -1,13 +1,13 @@
 import React from 'react'
 
-function Buttons() {
+function Buttons({data,setData}) {
   return (
     <div className="container flex align-items-center justify-content-center my-3 w-75">
           <button
             type="reset"
             className="w-25 mx-2 btn btn-primary rounded-pill"
           >
-            Clear all
+            Reset
           </button>
           <button
             type="submit"

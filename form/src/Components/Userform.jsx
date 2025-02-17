@@ -1,6 +1,3 @@
-import { data } from 'autoprefixer';
-import React, { useState } from 'react'
-
 function Userform({handleInvalidinput,data,setData,emailValidator}) {
   return (
     <div className="mb-3">
@@ -31,11 +28,11 @@ function Userform({handleInvalidinput,data,setData,emailValidator}) {
                 name="personName"
                 id="Name"
                 aria-describedby="emailHelp"
-                value={data.PersonName}
                 onChange={(e)=>{
                   handleInvalidinput(e);
                   setData({...data,PersonName:e.target.value});
                 }}
+                value={data.PersonName}
                 required
               />
             </div>
@@ -73,9 +70,9 @@ function Userform({handleInvalidinput,data,setData,emailValidator}) {
                 id="Phoneno."
                 name="person-number"
                 onChange={(e) => {
-                 setData({...data,personNumber:e.target.value});
+                 setData({...data,PersonNumber:e.target.value});
                 }}
-                value={data.personNumber}
+                value={data.PersonNumber}
                 required
                 aria-describedby="emailHelp"
               />

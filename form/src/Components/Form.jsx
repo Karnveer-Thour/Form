@@ -10,13 +10,8 @@ function Form() {
     OrganizationName: "",
     PersonName: "",
     PersonEmail: "",
-    personNumber: "",
+    PersonNumber: "",
     Same_person_as_Manager: "Yes",
-    managerDetails: {
-      managerName: "",
-      managerEmail: "",
-      managerNumber: "",
-    },
     eventOverview: {
       date_of_use: "",
       start_time: "",
@@ -26,22 +21,12 @@ function Form() {
       event_name: "",
       name_of_event_organizer: "",
       number_of_attendees: "",
-      event_details: "",
+      event_details_file: "",
       form_of_event: "",
-      other_form_of_event: "",
       co_organizer_support: "",
       Availability_of_interviews: "",
-      photoshoot: "",
       food_beverage_availibilty: "",
-      beverage_order_in_work_lounge: {
-        number_of_people: "",
-        start_time: "",
-      },
       Availibilty_of_productDemonstrations_exhibition_etc: "",
-      about_product: {
-        product_detial: "",
-        product_file: "",
-      },
       like_to_be_listed: "",
     },
   });
@@ -70,13 +55,13 @@ function Form() {
         backgroundColor: "#f0f0f0",
       }}
     >
-      <form>
+      <form onSubmit={e=>{e.preventDefault();console.log(data)}}>
         <Heading />
         <Companyform handleInvalidinput={handleInvalidinput} data={data} setData={setData} />
         <Userform handleInvalidinput={handleInvalidinput} data={data} setData={setData} emailValidator={emailValidator} />
-        <ManagerDetails handleInvalidinput={handleInvalidinput} data={data} setData={setData}/>
-        <Eventform handleInvalidinput={handleInvalidinput} />
-        <Buttons />
+        <ManagerDetails handleInvalidinput={handleInvalidinput} data={data} setData={setData} emailValidator={emailValidator}/>
+        <Eventform handleInvalidinput={handleInvalidinput} data={data} setData={setData} />
+        <Buttons data={data} setData={setData}/>
       </form>
     </div>
   );

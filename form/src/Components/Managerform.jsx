@@ -1,6 +1,4 @@
-import React from 'react'
-
-function Managerform({handleInvalidinput}) {
+function Managerform({handleInvalidinput,data,setData, emailValidator}) {
   return (
     <div
           className="container d-flex justify-content-between flex-row align-items-start flex-wrap"
@@ -18,7 +16,14 @@ function Managerform({handleInvalidinput}) {
               type="Text"
               className="form-control cM-options"
               id="M-Name"
-              onChange={handleInvalidinput}
+              onChange={e=>{handleInvalidinput(e);setData(prev=>({
+                ...prev,
+                managerDetails:{
+                  ...prev.managerDetails,
+                  managerName:e.target.value
+                }
+              }));}}
+              value={data.managerDetails.managerName}
               aria-describedby="emailHelp"
             />
           </div>
@@ -33,6 +38,17 @@ function Managerform({handleInvalidinput}) {
               type="email"
               className="form-control cM-options"
               id="M-Email"
+              onBlur={emailValidator}
+              onChange={e=>{
+                setData(prev=>({
+                  ...prev,
+                  managerDetails:{
+                    ...prev.managerDetails,
+                    managerEmail:e.target.value
+                  }
+                }))
+              }}
+              value={data.managerDetails.managerEmail}
               aria-describedby="emailHelp"
             />
           </div>
@@ -47,6 +63,16 @@ function Managerform({handleInvalidinput}) {
               type="Number"
               className="form-control cM-options"
               id="M-number"
+              onChange={e=>{
+                setData(prev=>({
+                  ...prev,
+                  managerDetails:{
+                    ...prev.managerDetails,
+                    managerNumber:e.target.value
+                  }
+                }));
+              }}
+              value={data.managerDetails.managerNumber}
               aria-describedby="emailHelp"
             />
           </div>

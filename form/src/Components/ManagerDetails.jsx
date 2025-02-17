@@ -1,7 +1,7 @@
 import React from "react";
 import Managerform from "./Managerform";
 
-function ManagerDetails({ handleInvalidinput, data, setData }) {
+function ManagerDetails({ handleInvalidinput, data, setData, emailValidator }) {
   const handlePersonNo = (e) => {
     setData((prev) => {
       const managerDetails = {
@@ -9,17 +9,15 @@ function ManagerDetails({ handleInvalidinput, data, setData }) {
         managerEmail: "",
         managerNumber: "",
       };
-      return {...prev,managerDetails};
+      return {...prev,managerDetails,Same_person_as_Manager:e.target.value};
     });
-    setData({...data,Same_person_as_Manager:e.target.value});
   };
   const handlePersonYes = (e) => {
-    setData((prevData) => {
-      const newUser = { ...prevData };
-      delete newUser.managerDetails;
-      return newUser;
+    setData(prev=>{
+      const {managerDetails,...prevdata}=prev;
+      let newdata={...prevdata,Same_person_as_Manager:"yes"};
+      return newdata;
     });
-    setData({...data,Same_person_as_Manager:e.target.value})
   };
   return (
     <>
@@ -83,7 +81,7 @@ function ManagerDetails({ handleInvalidinput, data, setData }) {
             </button>
           </div>
         </div>
-        {data.Same_person_as_Manager==="No"&&<Managerform handleInvalidinput={handleInvalidinput} />}
+        {data.Same_person_as_Manager==="No"&&<Managerform handleInvalidinput={handleInvalidinput} data={data} setData={setData} emailValidator={emailValidator} />}
       </div>
     </>
   );
