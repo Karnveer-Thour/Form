@@ -1,6 +1,6 @@
 function Companyform({handleInvalidinput,data,setData}) {
   return (
-    <div className="mb-3 me-3 ms-3 d-flex flex-column justify-content-start align-items-start">
+    <div className="mb-3 me-3 ms-5 d-flex flex-column justify-content-start align-items-start" style={{width:"93%"}}>
           <label
             htmlFor="OrganizationName"
             className="form-label mx-3"
