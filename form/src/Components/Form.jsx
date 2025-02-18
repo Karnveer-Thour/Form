@@ -6,6 +6,8 @@ import Heading from "./Heading";
 import ManagerDetails from "./ManagerDetails";
 import Userform from "./Userform";
 import Alert from "./Alert";
+import Firebase from "../Firebase"
+import { getFirestore, addDoc,collection } from "firebase/firestore";
 function Form() {
   const user={
     OrganizationName: "",
@@ -33,14 +35,28 @@ function Form() {
   }
   const [data, setData] = useState(user);
   const [message,setMessage]=useState();
-  const handleReset = (message)=>{
+  const [Action,setAction]=useState();
+  const writeData=async()=>{
+    try{
+      const db=getFirestore(Firebase);
+      await addDoc(collection(db, "formdata/"), data);
+      setAlert("success","Form submitted");
+      window.scrollTo({top:"0",behavior:"smooth"});
+    }catch(err){
+      setAlert("danger",err.message);
+      window.scrollTo({top:"0",behavior:"smooth"});
+    }
+  }
+  const handleReset = (action,message)=>{
     setData(user);
     window.scrollTo({top:"0",behavior:"smooth"});
-    setAlert(message)
+    setAlert(action,message);
   }
-  const setAlert=(message)=>{
-    setMessage(message);
+  const setAlert=(action,Message)=>{
+    setMessage(Message);
+    setAction(action);
     setTimeout(() => {
+      setAction();
       setMessage();
     }, 2000);
   }
@@ -69,8 +85,8 @@ function Form() {
         backgroundColor: "#f0f0f0",
       }}
     >
-      <form onSubmit={e=>{e.preventDefault();handleReset("Form submitted");console.log(data)}}>
-        <Alert message={message}/>
+      <form onSubmit={e=>{e.preventDefault(); writeData();console.log(data)}}>
+        <Alert message={message} action={Action}/>
         <Heading />
         <Companyform handleInvalidinput={handleInvalidinput} data={data} setData={setData} />
         <Userform handleInvalidinput={handleInvalidinput} data={data} setData={setData} emailValidator={emailValidator} />

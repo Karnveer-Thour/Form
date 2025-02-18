@@ -283,7 +283,6 @@ function Eventform({ handleInvalidinput, data, setData }) {
               });
             }}
             required
-            defaultChecked
           />
           <label className="form-check-label form-label" htmlFor="Pitch">
             Pitch Event
@@ -451,7 +450,6 @@ function Eventform({ handleInvalidinput, data, setData }) {
                 })
               }
               required
-              defaultChecked
             />
             <label className="form-check-label form-label" htmlFor="E-No">
               No
@@ -541,7 +539,6 @@ function Eventform({ handleInvalidinput, data, setData }) {
               });
             }}
             required
-            defaultChecked
             value="No food or drink"
           />
           <label className="form-check-label" htmlFor="No-bev">
@@ -631,7 +628,6 @@ function Eventform({ handleInvalidinput, data, setData }) {
               });
             }}
             required
-            defaultChecked
           />
           <label className="form-check-label" htmlFor="exhibitionsNo">
             No
@@ -684,14 +680,13 @@ function Eventform({ handleInvalidinput, data, setData }) {
               }));
             }}
             required
-            defaultChecked
           />
           <label className="form-check-label" htmlFor="listed-no">
             No
           </label>
         </div>
 
-            {/* Rest some points with checks */}
+        {/* Rest some points with checks */}
 
         <ul className="me-5 mt-1 ms-0" style={{ textAlign: "left" }}>
           <li>

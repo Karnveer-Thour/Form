@@ -6,7 +6,7 @@ function Buttons({handleReset}) {
           <button
           type='reset'
             className="w-25 mx-2 btn btn-primary rounded-pill"
-            onClick={()=> handleReset("Form Cleared")}
+            onClick={()=> handleReset("success","Form Cleared")}
           >
             Reset
           </button>
