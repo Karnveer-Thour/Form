@@ -36,6 +36,8 @@ function Form() {
   const [data, setData] = useState(user);
   const [message,setMessage]=useState();
   const [Action,setAction]=useState();
+  // eslint-disable-next-line
+  const [err,setErr]=useState(false);
   const writeData=async()=>{
     try{
       const db=getFirestore(Firebase);
@@ -64,8 +66,10 @@ function Form() {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!pattern.test(e.target.value)) {
       e.target.style.border = "2px solid red";
+      setErr(true);
     } else {
       e.target.style.border = "none";
+      setErr(false);
     }
   }
   const handleInvalidinput = (e) => {

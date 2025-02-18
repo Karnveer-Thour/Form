@@ -166,6 +166,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             className="form-control"
             id="Start-t"
             name="Event Name"
+            maxLength={60}
             aria-describedby="emailHelp"
             onChange={(e) => {
               handleInvalidinput(e);
@@ -190,6 +191,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             className="form-control"
             id="E-Name"
             name="Name of Event Organizer"
+            maxLength={60}
             aria-describedby="emailHelp"
             onChange={(e) => {
               handleInvalidinput(e);
@@ -217,7 +219,13 @@ function Eventform({ handleInvalidinput, data, setData }) {
             className="form-control"
             name="Number of people expected to attend"
             id="No-peoples"
+            
             onChange={(e) => {
+              if(e.target.value.length>=10){
+                // eslint-disable-next-line
+                e.target.value=e.target.value;
+                return;
+              }
               setData((prev) => ({
                 ...prev,
                 eventOverview: {
@@ -367,7 +375,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             setData={setData}
           />
         )}
-        <div className="mb-3 d-flex flex-column justify-content-start align-items-start w-100 mt-3">
+        <div className="mb-3 d-flex h-100 flex-column justify-content-start align-items-start w-100 mt-3">
           {/* Co-organizer/support */}
 
           <label
@@ -377,12 +385,15 @@ function Eventform({ handleInvalidinput, data, setData }) {
           >
             Co-Organizer/Support*
           </label>
-          <input
+          <textarea
             type="text"
             className="form-control mx-1"
             id="Co-Organizer/Support"
             name="Co-Organizer Support"
             aria-describedby="emailHelp"
+            style={{wordWrap:"break-word",height:"auto",resize:"none"}}
+            rows={3}
+            maxLength={400}
             onChange={(e) => {
               handleInvalidinput(e);
               setData((prev) => ({

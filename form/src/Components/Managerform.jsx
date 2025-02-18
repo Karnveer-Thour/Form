@@ -1,4 +1,29 @@
+import { useState } from "react";
 function Managerform({handleInvalidinput,data,setData, emailValidator}) {
+  const formatIndianPhoneNumber = (value) => {
+      // Remove all non-numeric characters
+      let cleaned = value.replace(/\D/g, "");
+      if (cleaned.startsWith("91")) {
+        cleaned = cleaned.slice(2);
+    }
+      // Apply formatting
+      if (cleaned.length <= 5) return cleaned;
+      if (cleaned.length < 10) return `${cleaned.slice(0, 5)}-${cleaned.slice(5)}`;
+      return `+91 ${cleaned.slice(0, 5)}-${cleaned.slice(5, 10)}`;
+    };
+    const [phone, setPhone] = useState(data.managerDetails.managerNumber);
+    const handleChange = (e) => {
+      const rawValue = e.target.value;
+
+      // Allow deletion by checking if last character was removed
+      if (rawValue.length < phone.length) {
+        setPhone(rawValue);
+        return;
+      }
+  
+      const formatted = formatIndianPhoneNumber(rawValue);
+      setPhone(formatted);
+    };
   return (
     <div
           className="container d-flex justify-content-between flex-row align-items-start flex-wrap"
@@ -15,6 +40,7 @@ function Managerform({handleInvalidinput,data,setData, emailValidator}) {
             <input
               type="Text"
               className="form-control cM-options"
+              maxLength={50}
               id="M-Name"
               onChange={e=>{handleInvalidinput(e);setData(prev=>({
                 ...prev,
@@ -39,6 +65,7 @@ function Managerform({handleInvalidinput,data,setData, emailValidator}) {
               className="form-control cM-options"
               id="M-Email"
               onBlur={emailValidator}
+              maxLength={50}
               onChange={e=>{
                 setData(prev=>({
                   ...prev,
@@ -60,19 +87,21 @@ function Managerform({handleInvalidinput,data,setData, emailValidator}) {
               Phone Number*
             </label>
             <input
-              type="Number"
+              type="text"
               className="form-control cM-options"
               id="M-number"
+              maxLength={15}
               onChange={e=>{
-                setData(prev=>({
-                  ...prev,
-                  managerDetails:{
-                    ...prev.managerDetails,
-                    managerNumber:e.target.value
-                  }
-                }));
+                handleChange(e);
               }}
-              value={data.managerDetails.managerNumber}
+              onBlur={(e)=> setData(prev=>({
+                ...prev,
+                managerDetails:{
+                  ...prev.managerDetails,
+                  managerNumber:e.target.value
+                }
+              }))}
+              value={phone}
               aria-describedby="emailHelp"
             />
           </div>

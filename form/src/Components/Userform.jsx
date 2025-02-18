@@ -1,4 +1,29 @@
+import { useState } from "react";
 function Userform({handleInvalidinput,data,setData,emailValidator}) {
+  const formatIndianPhoneNumber = (value) => {
+    // Remove all non-numeric characters
+    let cleaned = value.replace(/\D/g, "");
+    if (cleaned.startsWith("91")) {
+      cleaned = cleaned.slice(2);
+  }
+    // Apply formatting
+    if (cleaned.length <= 5) return cleaned;
+    if (cleaned.length < 10) return `${cleaned.slice(0, 5)}-${cleaned.slice(5)}`;
+    return `+91 ${cleaned.slice(0, 5)}-${cleaned.slice(5, 10)}`;
+  };
+  const [phone, setPhone] = useState(data.PersonNumber);
+  const handleChange = (e) => {
+    const rawValue = e.target.value;
+
+      // Allow deletion by checking if last character was removed
+      if (rawValue.length < phone.length) {
+        setPhone(rawValue);
+        return;
+      }else{
+            const formatted = formatIndianPhoneNumber(rawValue);
+            setPhone(formatted);
+      }
+  };
   return (
     <div className="mb-3">
           <div className="mt-4 mx-3 d-flex flex-column justify-content-start align-items-start">
@@ -26,6 +51,7 @@ function Userform({handleInvalidinput,data,setData,emailValidator}) {
                 type="Text"
                 className="form-control"
                 name="personName"
+                maxLength={50}
                 id="Name"
                 aria-describedby="emailHelp"
                 onChange={(e)=>{
@@ -48,6 +74,7 @@ function Userform({handleInvalidinput,data,setData,emailValidator}) {
                 name="person-Email"
                 className="form-control"
                 id="Email1"
+                maxLength={50}
                 aria-describedby="emailHelp"
                 onChange={(e)=>{
                   setData({...data,PersonEmail:e.target.value});
@@ -65,14 +92,16 @@ function Userform({handleInvalidinput,data,setData,emailValidator}) {
                 Phone Number*
               </label>
               <input
-                type="Number"
+                type="text"
                 className="form-control"
                 id="Phoneno."
                 name="person-number"
+                maxLength={15}
                 onChange={(e) => {
-                 setData({...data,PersonNumber:e.target.value});
+                  handleChange(e);
                 }}
-                value={data.PersonNumber}
+                onBlur={(e)=>setData({...data,PersonNumber:e.target.value})}
+                value={phone}
                 required
                 aria-describedby="emailHelp"
               />

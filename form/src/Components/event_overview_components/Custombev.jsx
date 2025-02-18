@@ -18,6 +18,11 @@ function Custombev({setData,data}) {
             id="No-people"
             aria-describedby="emailHelp"
             onChange={e=>{
+              if(e.target.value.length>=10){
+                // eslint-disable-next-line
+                e.target.value=e.target.value;
+                return;
+              }
                 setData(prev=>({
                     ...prev,
                     eventOverview:{

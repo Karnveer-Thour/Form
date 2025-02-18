@@ -7,10 +7,13 @@ function Otherinput({handleInvalidinput,data,setData}) {
         id="OtherInput"
         style={{ width: "100%", height: "70px"}}
       >
-        <input
+        <textarea
           type="Text"
-          className="form-control h-100"
+          className="form-control mx-1"
           id="other-event"
+          style={{resize:"none",height:"auto"}}
+          rows={3}
+          maxLength={400}
           onChange={e=>{
             handleInvalidinput(e);
             setData(prev=>({

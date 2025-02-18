@@ -3,7 +3,7 @@ import React from 'react'
 function Exhibition_component({handleInvalidinput,data,setData}) {
   return (
    <>
-     <div className="form-group my-2 mx-2 w-100 text-left d-flex flex-column align-items-start">
+     <div className="form-group my-2 mx-2 me-4 text-left d-flex flex-column align-items-start">
           <label htmlFor="Product-S" className="mx-2">
             If yes, please describe in detail the products you plan to
             bring (product name, size, quantity, etc.)
@@ -11,6 +11,7 @@ function Exhibition_component({handleInvalidinput,data,setData}) {
           <input
             type="text"
             className="form-control product-opt"
+            maxLength={140}
             id="Product-S"
             aria-describedby="emailHelp"
             onChange={e=>{

@@ -14,6 +14,7 @@ function Companyform({handleInvalidinput,data,setData}) {
             id="OrganizationName"
             name="OrganizationName"
             aria-describedby="organizationName"
+            maxLength={100}
             onChange={(e)=>{
               handleInvalidinput(e);
               setData({...data,OrganizationName:e.target.value});
@@ -21,6 +22,7 @@ function Companyform({handleInvalidinput,data,setData}) {
             value={data.OrganizationName}
             required
           />
+          <p className="error ms-2 mb-0 fs-5 mt-2" style={{color:"red"}}>Enter a valid Organization Name</p>
         </div>
   )
 }

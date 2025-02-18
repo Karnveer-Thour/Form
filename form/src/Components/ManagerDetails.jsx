@@ -2,6 +2,7 @@ import React from "react";
 import Managerform from "./Managerform";
 
 function ManagerDetails({ handleInvalidinput, data, setData, emailValidator }) {
+  
   const handlePersonNo = (e) => {
     setData((prev) => {
       const managerDetails = {
