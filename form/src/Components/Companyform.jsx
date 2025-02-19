@@ -22,7 +22,7 @@ function Companyform({handleInvalidinput,data,setData}) {
             value={data.OrganizationName}
             required
           />
-          <p className="error ms-2 mb-0 fs-5 mt-2" style={{color:"red"}}>Enter a valid Organization Name</p>
+          <p className="ms-2 mb-0 fs-5 mt-2" style={{color:"red",display:"none"}}>Enter a valid Organization Name</p>
         </div>
   )
 }

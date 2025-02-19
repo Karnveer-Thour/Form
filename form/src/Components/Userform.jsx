@@ -61,6 +61,7 @@ function Userform({handleInvalidinput,data,setData,emailValidator}) {
                 value={data.PersonName}
                 required
               />
+              <p className=" mb-0 mt-0 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid Name</p>
             </div>
             <div className="me-5" style={{ width: "40%" }}>
               <label
@@ -83,6 +84,7 @@ function Userform({handleInvalidinput,data,setData,emailValidator}) {
                 value={data.PersonEmail}
                 required
               />
+              <p className=" mb-0 mt-0 ms-1 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid Email</p>
             </div>
             <div className="ms-5 mt-2" style={{ width: "40%" }}>
               <label

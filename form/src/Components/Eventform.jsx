@@ -1,8 +1,23 @@
+import { useState } from "react";
 import Custombev from "./event_overview_components/Custombev";
 import Exhibitioncomponent from "./event_overview_components/Exhibition_component";
+import Imagepreview from "./event_overview_components/Imagepreview";
 import Otherinput from "./event_overview_components/Otherinput";
 import Phootoshoot from "./event_overview_components/Photoshoot";
-function Eventform({ handleInvalidinput, data, setData }) {
+function Eventform({ handleInvalidinput, data, setData,handleInvalidTime,handleInvalidEntryime }) {
+  const imagePreview=(e)=>{
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader(file);
+        reader.onload = function(result) {
+          e.target.nextSibling.src = result.target.result;
+          e.target.nextSibling.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    } else {
+      e.target.nextSibling.style.display = 'none';
+    }
+  }
   return (
     // Heading of event overview
     <div className="mb-3">
@@ -58,6 +73,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             id="Start-t"
             aria-describedby="emailHelp"
             onChange={(e) => {
+              handleInvalidEntryime(e);
               setData((prev) => ({
                 ...prev,
                 eventOverview: {
@@ -69,6 +85,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             value={data.eventOverview.start_time}
             required
           />
+           <p className=" mb-0 mt-0 ms-1 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid Start time</p>
         </div>
         <div className="me-5" style={{ width: "40%" }}>
           <label htmlFor="E-Time" className="form-label text-start w-100 mx-3">
@@ -81,6 +98,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             id="E-Time"
             aria-describedby="emailHelp"
             onChange={(e) => {
+              handleInvalidTime(e);
               setData((prev) => ({
                 ...prev,
                 eventOverview: {
@@ -92,6 +110,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             value={data.eventOverview.end_time}
             required
           />
+          <p className=" mb-0 mt-0 ms-1 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid End time</p>
         </div>
         <div className="ms-5 mt-2" style={{ width: "40%" }}>
           <label htmlFor="En-Time" className="form-label text-start w-100 mx-3">
@@ -103,6 +122,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             name="Entry time"
             id="En-Time"
             onChange={(e) => {
+              handleInvalidEntryime(e);
               setData((prev) => ({
                 ...prev,
                 eventOverview: {
@@ -114,6 +134,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             value={data.eventOverview.entry_time}
             required
           />
+           <p className=" mb-0 mt-0 ms-1 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid Entry time</p>
         </div>
         <div className="me-5 mt-2" style={{ width: "40%" }}>
           <label htmlFor="Ex-Time" className="form-label text-start w-100 mx-3">
@@ -125,6 +146,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             name="Exit time"
             id="Ex-Time"
             onChange={(e) => {
+              handleInvalidTime(e);
               setData((prev) => ({
                 ...prev,
                 eventOverview: {
@@ -136,6 +158,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             value={data.eventOverview.exit_time}
             required
           />
+          <p className=" mb-0 mt-0 ms-1 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid Exit time</p>
         </div>
       </div>
       <ul className="mt-4" style={{ fontSize: "1rem", textAlign: "left" }}>
@@ -181,6 +204,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             value={data.eventOverview.event_name}
             required
           />
+          <p className=" mb-0 mt-0 ms-1 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid Event Name</p>
         </div>
         <div className="me-5" style={{ width: "40%" }}>
           <label htmlFor="E-Name" className="form-label text-start w-100 mx-3">
@@ -206,6 +230,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             value={data.eventOverview.name_of_event_organizer}
             required
           />
+          <p className=" mb-0 mt-0 ms-1 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid Organizer Name</p>
         </div>
         <div className="ms-5 mt-2" style={{ width: "40%" }}>
           <label
@@ -247,20 +272,16 @@ function Eventform({ handleInvalidinput, data, setData }) {
           </label>
           <input
             type="file"
+            accept="image/*"
             className="form-control"
             id="E-Details"
             name="Event Details"
             onChange={(e) => {
-              setData((prev) => ({
-                ...prev,
-                eventOverview: {
-                  ...prev.eventOverview,
-                  event_details_file: e.target.value,
-                },
-              }));
+              imagePreview(e);
             }}
-            value={data.eventOverview.event_details_file}
+            
           />
+          <Imagepreview/>
           <div id="emailHelp" className="form-text text-start w-100 mx-3">
             lf you have a proposal, upload here
           </div>
@@ -407,6 +428,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
             value={data.eventOverview.co_organizer_support}
             required
           />
+          <p className=" ms-1 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid Co-Organizer/Support</p>
 
           {/* Availabilities of interviews */}
         </div>
@@ -617,6 +639,7 @@ function Eventform({ handleInvalidinput, data, setData }) {
               handleInvalidinput={handleInvalidinput}
               data={data}
               setData={setData}
+              imagePreview={imagePreview}
             />
           )}
         </div>

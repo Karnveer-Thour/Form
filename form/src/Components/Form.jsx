@@ -37,7 +37,27 @@ function Form() {
   const [message,setMessage]=useState();
   const [Action,setAction]=useState();
   // eslint-disable-next-line
-  const [err,setErr]=useState(false);
+  const [err,setErr]=useState({});
+  const invalidtrue=(e)=>{
+    let name=e.target.name;
+    const value=e.target.value;
+    e.target.nextSibling.style.display="block";
+    e.target.style.border = "2px solid red";
+    setErr(prev=>({
+      ...prev,
+      [name]:value
+    }));
+  }
+  const invalidFalse=(e)=>{
+    let name=e.target.name;
+    const value=e.target.value;
+    e.target.nextSibling.style.display="none";
+    e.target.style.border = "none";
+    setErr(prev=>{
+      const {[name]:value,...rest}=prev;
+      return rest;
+    });
+  }
   const writeData=async()=>{
     try{
       const db=getFirestore(Firebase);
@@ -64,21 +84,46 @@ function Form() {
   }
   const emailValidator=(e)=>{
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let name=e.target.name;
+    const value=e.target.value;
     if (!pattern.test(e.target.value)) {
-      e.target.style.border = "2px solid red";
-      setErr(true);
+      invalidtrue(e);
     } else {
-      e.target.style.border = "none";
-      setErr(false);
+      invalidFalse(e);
+    }
+  }
+  const handleInvalidExitime=(e)=>{
+    if(e.target.value<e.target.parentElement.previousElementSibling.childNodes[1].value){
+     invalidtrue(e);
+    }else{
+      invalidFalse(e);
+    }
+  }
+  const handleInvalidEntryime=(e)=>{
+    if(!e.target.parentElement.nextElementSibling.childNodes[1].value)return;
+    if(e.target.value>e.target.parentElement.nextElementSibling.childNodes[1].value){
+     invalidtrue(e);
+    }else{
+      invalidFalse(e);
     }
   }
   const handleInvalidinput = (e) => {
     if (/\d/.test(e.target.value)) {
-      e.target.style.border = "2px solid red";
+      invalidtrue(e);
     } else {
-      e.target.style.border = "none";
+     invalidFalse(e);
     }
   };
+  
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    if(Object.keys(err).length!==0){
+      setAlert("danger","Some values are invalid");
+      window.scrollTo({top:"0"});
+      return;
+    }
+    writeData();
+  }
   return (
     <div
       className="container mt-5 d-flex flex-direction-column justify-content-start align-items-start"
@@ -89,13 +134,13 @@ function Form() {
         backgroundColor: "#f0f0f0",
       }}
     >
-      <form onSubmit={e=>{e.preventDefault(); writeData();console.log(data)}}>
+      <form onSubmit={handleSubmit}>
         <Alert message={message} action={Action}/>
         <Heading />
         <Companyform handleInvalidinput={handleInvalidinput} data={data} setData={setData} />
         <Userform handleInvalidinput={handleInvalidinput} data={data} setData={setData} emailValidator={emailValidator} />
         <ManagerDetails handleInvalidinput={handleInvalidinput} data={data} setData={setData} emailValidator={emailValidator}/>
-        <Eventform handleInvalidinput={handleInvalidinput} data={data} setData={setData} />
+        <Eventform handleInvalidinput={handleInvalidinput} data={data} setData={setData} handleInvalidTime={handleInvalidExitime} handleInvalidEntryime={handleInvalidEntryime}/>
         <Buttons handleReset={handleReset}/>
       </form>
     </div>

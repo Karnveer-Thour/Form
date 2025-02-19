@@ -5,7 +5,7 @@ function Otherinput({handleInvalidinput,data,setData}) {
     <div
         className="ms-1 mt-2"
         id="OtherInput"
-        style={{ width: "100%", height: "70px"}}
+        style={{ width: "100%", height: "auto"}}
       >
         <textarea
           type="Text"
@@ -26,6 +26,7 @@ function Otherinput({handleInvalidinput,data,setData}) {
           value={data.eventOverview.other_form_of_event}
           required
         />
+        <p className=" ms-1 fs-5" style={{color:"red",display:"none",textAlign:"left"}}>Enter a valid form of event</p>
       </div>
   )
 }
