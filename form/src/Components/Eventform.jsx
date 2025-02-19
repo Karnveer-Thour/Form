@@ -1,10 +1,9 @@
-import { useState } from "react";
 import Custombev from "./event_overview_components/Custombev";
 import Exhibitioncomponent from "./event_overview_components/Exhibition_component";
 import Imagepreview from "./event_overview_components/Imagepreview";
 import Otherinput from "./event_overview_components/Otherinput";
 import Phootoshoot from "./event_overview_components/Photoshoot";
-function Eventform({ handleInvalidinput, data, setData,handleInvalidTime,handleInvalidEntryime }) {
+function Eventform({ handleInvalidinput, data, setData,handleInvalidTime,handleInvalidEntryime,setImage1,setImage2 }) {
   const imagePreview=(e)=>{
     const file = e.target.files[0];
     if (file) {
@@ -278,8 +277,9 @@ function Eventform({ handleInvalidinput, data, setData,handleInvalidTime,handleI
             name="Event Details"
             onChange={(e) => {
               imagePreview(e);
+              setImage1(e.target.files[0]);
             }}
-            
+            required
           />
           <Imagepreview/>
           <div id="emailHelp" className="form-text text-start w-100 mx-3">
@@ -640,6 +640,7 @@ function Eventform({ handleInvalidinput, data, setData,handleInvalidTime,handleI
               data={data}
               setData={setData}
               imagePreview={imagePreview}
+              setImage={setImage2}
             />
           )}
         </div>

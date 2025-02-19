@@ -2,15 +2,14 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBSOXyhjlh9lXzWjEI1lsId9XsKuEaQFvY",
-    authDomain: "form-a1959.firebaseapp.com",
-    projectId: "form-a1959",
-    storageBucket: "form-a1959.firebasestorage.app",
-    messagingSenderId: "358790379111",
-    appId: "1:358790379111:web:5d87a87c0ce72b959dc6c2",
-    measurementId: "G-7T957ELHYT",
-    databaseURL: "https://form-a1959-default-rtdb.asia-southeast1.firebasedatabas.app/",
-  };
+  apiKey: "AIzaSyB0LHtD-mPywIKEs3rwmeIVbc-GV5NuSW8",
+  authDomain: "form-b18e6.firebaseapp.com",
+  projectId: "form-b18e6",
+  storageBucket: "form-b18e6.firebasestorage.app",
+  messagingSenderId: "411265579139",
+  appId: "1:411265579139:web:0ac932ccc12879a63a43b6",
+  databaseURL: "https://form-b18e6-default-rtdb.asia-southeast1.firebasedatabase.app/",
+};
 
 // Initialize Firebase
 const Firebase = initializeApp(firebaseConfig);

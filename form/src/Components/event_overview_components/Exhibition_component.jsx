@@ -1,7 +1,6 @@
 import React from 'react'
 import Imagepreview from './Imagepreview';
-
-function Exhibition_component({handleInvalidinput,data,setData,imagePreview}) {
+function Exhibition_component({handleInvalidinput,data,setData,imagePreview,setImage}) {
   return (
    <>
      <div className="form-group my-2 mx-2 me-4 text-left d-flex flex-column align-items-start">
@@ -17,16 +16,6 @@ function Exhibition_component({handleInvalidinput,data,setData,imagePreview}) {
             aria-describedby="emailHelp"
             onChange={e=>{
                 handleInvalidinput(e);
-                setData(prev=>({
-                    ...prev,
-                    eventOverview:{
-                        ...prev.eventOverview,
-                        about_product:{
-                            ...prev.eventOverview.about_product,
-                            product_detail:e.target.value
-                        }
-                    }
-                }))
             }}
             value={data.eventOverview.about_product.product_detail}
             required
@@ -45,6 +34,7 @@ function Exhibition_component({handleInvalidinput,data,setData,imagePreview}) {
             id="Product-D"
             onChange={e=>{
                imagePreview(e);
+               setImage(e.target.files[0]);
             }}
             required
           />
