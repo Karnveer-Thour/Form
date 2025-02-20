@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Buttons from "./Buttons";
 import Companyform from "./Companyform";
 import Eventform from "./Eventform";
@@ -9,8 +9,8 @@ import Alert from "./Alert";
 import Firebase from "../Firebase";
 import axios from "axios";
 import { getFirestore, addDoc, collection } from "firebase/firestore";
-function Form() {
-  const cloudName = "dszgssbnh"; 
+function Form({ setProgress }) {
+  const cloudName = "dszgssbnh";
   const uploadPreset = "Form pictures";
   let user = {
     OrganizationName: "",
@@ -36,8 +36,9 @@ function Form() {
       like_to_be_listed: "",
     },
   };
-  const [image1,setImage1]=useState();
-  const [image2,setImage2]=useState();
+  const initialUser={...user};
+  const [image1, setImage1] = useState();
+  const [image2, setImage2] = useState();
   const [data, setData] = useState(user);
   const [message, setMessage] = useState();
   const [Action, setAction] = useState();
@@ -58,7 +59,6 @@ function Form() {
   };
   const invalidFalse = (e) => {
     let name = e.target.name;
-    const value = e.target.value;
     e.target.nextSibling.style.display = "none";
     e.target.style.border = "none";
     setErr((prev) => {
@@ -69,16 +69,20 @@ function Form() {
   const writeData = async () => {
     try {
       const db = getFirestore(Firebase);
+      setProgress(70);
       await addDoc(collection(db, "formdata/"), user);
-      setAlert("success", "Form submitted");
+      setProgress(90);
       window.scrollTo({ top: "0", behavior: "smooth" });
+      setProgress(100);
+      setAlert("success","Form Submitted Successfully");
     } catch (err) {
       setAlert("danger", err.message);
+      setProgress(0);
       window.scrollTo({ top: "0", behavior: "smooth" });
     }
   };
   const handleReset = (action, message) => {
-    setData(user);
+    setData(initialUser);
     window.scrollTo({ top: "0", behavior: "smooth" });
     setAlert(action, message);
   };
@@ -92,8 +96,6 @@ function Form() {
   };
   const emailValidator = (e) => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    let name = e.target.name;
-    const value = e.target.value;
     if (!pattern.test(e.target.value)) {
       invalidtrue(e);
     } else {
@@ -102,7 +104,7 @@ function Form() {
   };
   const handleInvalidExitime = (e) => {
     if (
-      e.target.value <
+      e.target.value <=
       e.target.parentElement.previousElementSibling.childNodes[1].value
     ) {
       invalidtrue(e);
@@ -113,7 +115,7 @@ function Form() {
   const handleInvalidEntryime = (e) => {
     if (!e.target.parentElement.nextElementSibling.childNodes[1].value) return;
     if (
-      e.target.value >
+      e.target.value >=
       e.target.parentElement.nextElementSibling.childNodes[1].value
     ) {
       invalidtrue(e);
@@ -129,47 +131,79 @@ function Form() {
     }
   };
 
-const handleUpload=async(image)=>{
-  const formData = new FormData();
-  formData.append("file", image);
-  formData.append("upload_preset", uploadPreset);
-  try {
+  const handleUpload = async (image) => {
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", uploadPreset);
+    try {
       const response = await axios.post(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
         formData
       );
-      const ImageUrl=response.data.secure_url;
-      return ImageUrl; 
+      const ImageUrl = response.data.secure_url;
+      return ImageUrl;
     } catch (error) {
       console.error("Error uploading image:", error.message);
-    } 
-}
-  const handleSubmit = async(e) => {
+    }
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    user=data;
+    setProgress(10);
+    user = data;
     if (Object.keys(err).length !== 0) {
       setAlert("danger", "Some values are invalid");
       window.scrollTo({ top: "0" });
       return;
     }
-    if(image1){
-      try{
-      const imageUrl=await handleUpload(image1);
-      user={...user,eventOverview:{...user.eventOverview,event_details_file:imageUrl}}
-      console.log(user);
-      }catch{
-        setAlert("danger","Unable to upload image");
+    if (image1 || image2) {
+      try {
+        // Create an array of promises for the image uploads
+        const uploadPromises = [];
+    
+        if (image1) {
+          uploadPromises.push(
+            handleUpload(image1).then((imageUrl) => {
+              user = {
+                ...user,
+                eventOverview: {
+                  ...user.eventOverview,
+                  event_details_file: imageUrl,
+                },
+              };
+              setProgress(15); // Update progress after first upload
+            })
+          );
+        }
+    
+        if (image2) {
+          uploadPromises.push(
+            handleUpload(image2).then((imageUrl) => {
+              user = {
+                ...user,
+                eventOverview: {
+                  ...user.eventOverview,
+                  about_product: {
+                    ...user.eventOverview.about_product,
+                    product_file: imageUrl,
+                  },
+                },
+              };
+              setProgress(45); // Update progress after second upload
+            })
+          );
+        }
+    
+        // Wait for all uploads to complete
+        await Promise.all(uploadPromises);
+    
+        // Update progress after all uploads are done
+        setProgress(60); // Or any other progress value you want
+      } catch (error) {
+        setAlert("danger", "Unable to upload image(s)");
+        setProgress(0);
+        window.scrollTo({ top: "0", behavior: "smooth" });
         return;
       }
-    }
-    if(image2){
-      try{
-        const imageUrl=await handleUpload(image2);
-        user={...user,eventOverview:{...user.eventOverview,about_product:{...user.eventOverview.about_product,product_file:imageUrl}}};
-        }catch{
-          setAlert("danger","Unable to upload image");
-          return;
-        }
     }
     writeData();
   };

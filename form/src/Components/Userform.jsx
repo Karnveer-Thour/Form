@@ -101,9 +101,9 @@ function Userform({handleInvalidinput,data,setData,emailValidator}) {
                 maxLength={15}
                 onChange={(e) => {
                   handleChange(e);
+                  setData({...data,PersonNumber:e.target.value})
                 }}
-                onBlur={(e)=>setData({...data,PersonNumber:e.target.value})}
-                value={phone}
+                value={data.PersonNumber}
                 required
                 aria-describedby="emailHelp"
               />

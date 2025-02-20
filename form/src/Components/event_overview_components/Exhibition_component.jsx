@@ -16,6 +16,16 @@ function Exhibition_component({handleInvalidinput,data,setData,imagePreview,setI
             aria-describedby="emailHelp"
             onChange={e=>{
                 handleInvalidinput(e);
+                setData(prev=>({
+                  ...prev,
+                  eventOverview:{
+                    ...prev.eventOverview,
+                    about_product:{
+                      ...prev.eventOverview.about_product,
+                      product_detail:e.target.value
+                    }
+                  }
+                }))
             }}
             value={data.eventOverview.about_product.product_detail}
             required
