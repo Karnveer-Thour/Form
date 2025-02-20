@@ -1,6 +1,6 @@
 function Companyform({handleInvalidinput,data,setData}) {
   return (
-    <div className="mb-3 me-3 ms-5 d-flex flex-column justify-content-start align-items-start" style={{width:"93%"}}>
+    <div className="mb-3 me-3 ms-5 d-flex flex-column justify-content-start align-items-start organization" style={{width:"93%"}}>
           <label
             htmlFor="OrganizationName"
             className="form-label mx-3"
@@ -22,7 +22,7 @@ function Companyform({handleInvalidinput,data,setData}) {
             value={data.OrganizationName}
             required
           />
-          <p className="ms-2 mb-0 fs-5 mt-2" style={{color:"red",display:"none"}}>Enter a valid Organization Name</p>
+          <p className=" mb-0 fs-5 mt-2" style={{color:"red",display:"none"}}>Enter a valid Organization Name</p>
         </div>
   )
 }

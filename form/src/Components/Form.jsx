@@ -42,19 +42,14 @@ function Form({ setProgress }) {
   const [data, setData] = useState(user);
   const [message, setMessage] = useState();
   const [Action, setAction] = useState();
-  // useEffect(()=>{
-  //   setData(data);
-  // },[data]);
-  // eslint-disable-next-line
   const [err, setErr] = useState({});
   const invalidtrue = (e) => {
     let name = e.target.name;
-    const value = e.target.value;
     e.target.nextSibling.style.display = "block";
     e.target.style.border = "2px solid red";
     setErr((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: e.target.value,
     }));
   };
   const invalidFalse = (e) => {
@@ -209,9 +204,9 @@ function Form({ setProgress }) {
   };
   return (
     <div
-      className="container mt-5 d-flex flex-direction-column justify-content-start align-items-start"
+      className="maincontainer my-5 d-flex flex-direction-column justify-content-center align-items-center p-5"
       style={{
-        width: "80vw",
+        width: "80%",
         height: "auto",
         borderRadius: "15px",
         backgroundColor: "#f0f0f0",

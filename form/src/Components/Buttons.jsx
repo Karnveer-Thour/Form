@@ -2,7 +2,7 @@ import React from 'react'
 
 function Buttons({handleReset}) {
   return (
-    <div className="container flex align-items-center justify-content-center my-3 w-75">
+    <div className="container d-flex align-items-center justify-content-center mt-1 w-75">
           <button
           type='reset'
             className="w-25 mx-2 btn btn-primary rounded-pill"
